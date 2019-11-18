@@ -17,31 +17,48 @@
   var app = d.querySelector("#app");
   var screenReader = d.querySelector("#screen-reader");
 
+
+
   /**
    * Functions
    */
 
+  /**
+   * Sanitize and encode all HTML in a user-submitted string
+   * (c) 2018 Chris Ferdinandi, MIT License, https://gomakethings.com
+   * @param  {String} str  The user-submitted string
+   * @return {String}      The sanitized string
+   */
+  function sanitizeHTML(str) {
+    var temp = document.createElement('div');
+    temp.textContent = str;
+    return temp.innerHTML;
+  }
+
+  // Get the JSON from a fetch request
   function getJSON(response) {
     return (response.ok) ? response.json() : Promise.reject(response);
   }
 
+  // Fetch data from an endpoint AND get the JSON, in a single function
+  function getData(url) {
+    return fetch(url).then(getJSON);
+  }
+
   function insertData(data) {
-    // Get only the data we need
+    // Get the actual data object
     data = data["data"][0];
 
     // Show the weather data on the page
     app.innerHTML = (
-      "<img " +
-        "src='https://www.weatherbit.io/static/img/icons/" + data.weather.icon + ".png' " +
-        "alt='" + data.weather.description + "'>" +
+      "<img src='https://www.weatherbit.io/static/img/icons/" + sanitizeHTML(data.weather.icon) + ".png' alt='" + sanitizeHTML(data.weather.description) + "'>" +
       "<p>" +
-        "Right now in " + data.city_name + ", it's " + data.temp + "&deg;C " +
-        "and " + data.weather.description.toLowerCase() + "." +
+        "Right now in " + sanitizeHTML(data.city_name) + ", it's " + sanitizeHTML(data.temp) + "&deg;C and " + sanitizeHTML(data.weather.description).toLowerCase() + "." +
       "</p>" +
       "<p>" +
         " Last observed: " +
         "<time>" +
-          new Date(data.ob_time.replace(" ", "T")).toLocaleTimeString() +
+          new Date(sanitizeHTML(data.ob_time).replace(" ", "T")).toLocaleTimeString() +
         "</time>." +
       "</p>"
     );
@@ -50,16 +67,16 @@
     screenReader.textContent = app.textContent;
   }
 
+  // Fetch data from the Weatherbit API
   function getWeather(data) {
-    return (
-      fetch(endpoints.weather.url +
-        "?key=" + endpoints.weather.apiKey +
-        "&city=" + data.city +
-        "&country=" + data.country
-      ).then(getJSON).then(insertData)
+    return getData(endpoints.weather.url +
+      "?key=" + endpoints.weather.apiKey +
+      "&city=" + data.city +
+      "&country=" + data.country
     );
   }
 
+  // Insert an error message into the DOM
   function insertError(error) {
     app.innerHTML = (
       "<p>" +
@@ -68,13 +85,15 @@
     );
   }
 
+
+
   /**
    * Init
    */
 
-  fetch(endpoints.location)
-    .then(getJSON)
+  getData(endpoints.location)
     .then(getWeather)
+    .then(insertData)
     .catch(insertError);
 
 })(document);
