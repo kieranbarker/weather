@@ -21,6 +21,18 @@
    * Functions
    */
 
+  /**
+   * Sanitize and encode all HTML in a user-submitted string
+   * (c) 2018 Chris Ferdinandi, MIT License, https://gomakethings.com
+   * @param  {String} str  The user-submitted string
+   * @return {String}      The sanitized string
+   */
+  function sanitizeHTML(str) {
+    var temp = document.createElement('div');
+    temp.textContent = str;
+    return temp.innerHTML;
+  }
+
   function getJSON(response) {
     return (response.ok) ? response.json() : Promise.reject(response);
   }
@@ -31,17 +43,14 @@
 
     // Show the weather data on the page
     app.innerHTML = (
-      "<img " +
-        "src='https://www.weatherbit.io/static/img/icons/" + data.weather.icon + ".png' " +
-        "alt='" + data.weather.description + "'>" +
+      "<img src='https://www.weatherbit.io/static/img/icons/" + sanitizeHTML(data.weather.icon) + ".png' alt='" + sanitizeHTML(data.weather.description) + "'>" +
       "<p>" +
-        "Right now in " + data.city_name + ", it's " + data.temp + "&deg;C " +
-        "and " + data.weather.description.toLowerCase() + "." +
+        "Right now in " + sanitizeHTML(data.city_name) + ", it's " + sanitizeHTML(data.temp) + "&deg;C and " + sanitizeHTML(data.weather.description).toLowerCase() + "." +
       "</p>" +
       "<p>" +
         " Last observed: " +
         "<time>" +
-          new Date(data.ob_time.replace(" ", "T")).toLocaleTimeString() +
+          new Date(sanitizeHTML(data.ob_time).replace(" ", "T")).toLocaleTimeString() +
         "</time>." +
       "</p>"
     );
