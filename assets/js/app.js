@@ -37,6 +37,10 @@
     return (response.ok) ? response.json() : Promise.reject(response);
   }
 
+  function fetchData(url) {
+    return fetch(url).then(getJSON);
+  }
+
   function insertData(data) {
     // Get the actual data object
     data = data["data"][0];
@@ -60,7 +64,7 @@
   }
 
   function fetchWeather(data) {
-    return fetch(endpoints.weather.url +
+    return fetchData(endpoints.weather.url +
       "?key=" + endpoints.weather.apiKey +
       "&city=" + data.city +
       "&country=" + data.country
@@ -79,10 +83,8 @@
    * Init
    */
 
-  fetch(endpoints.location)
-    .then(getJSON)
+  fetchData(endpoints.location)
     .then(fetchWeather)
-    .then(getJSON)
     .then(insertData)
     .catch(insertError);
 
