@@ -41,7 +41,7 @@
   }
 
   // Fetch data from an endpoint AND get the JSON, in a single function
-  function fetchData(url) {
+  function getData(url) {
     return fetch(url).then(getJSON);
   }
 
@@ -68,8 +68,8 @@
   }
 
   // Fetch data from the Weatherbit API
-  function fetchWeather(data) {
-    return fetchData(endpoints.weather.url +
+  function getWeather(data) {
+    return getData(endpoints.weather.url +
       "?key=" + endpoints.weather.apiKey +
       "&city=" + data.city +
       "&country=" + data.country
@@ -91,8 +91,8 @@
    * Init
    */
 
-  fetchData(endpoints.location)
-    .then(fetchWeather)
+  getData(endpoints.location)
+    .then(getWeather)
     .then(insertData)
     .catch(insertError);
 
