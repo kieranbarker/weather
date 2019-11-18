@@ -17,6 +17,8 @@
   var app = d.querySelector("#app");
   var screenReader = d.querySelector("#screen-reader");
 
+
+
   /**
    * Functions
    */
@@ -82,6 +84,8 @@
       "</p>"
     );
   }
+
+
 
   /**
    * Init
