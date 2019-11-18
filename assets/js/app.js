@@ -38,7 +38,7 @@
   }
 
   function insertData(data) {
-    // Get only the data we need
+    // Get the actual data object
     data = data["data"][0];
 
     // Show the weather data on the page
