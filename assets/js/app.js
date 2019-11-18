@@ -59,13 +59,11 @@
     screenReader.textContent = app.textContent;
   }
 
-  function getWeather(data) {
-    return (
-      fetch(endpoints.weather.url +
-        "?key=" + endpoints.weather.apiKey +
-        "&city=" + data.city +
-        "&country=" + data.country
-      ).then(getJSON).then(insertData)
+  function fetchWeather(data) {
+    return fetch(endpoints.weather.url +
+      "?key=" + endpoints.weather.apiKey +
+      "&city=" + data.city +
+      "&country=" + data.country
     );
   }
 
@@ -83,7 +81,9 @@
 
   fetch(endpoints.location)
     .then(getJSON)
-    .then(getWeather)
+    .then(fetchWeather)
+    .then(getJSON)
+    .then(insertData)
     .catch(insertError);
 
 })(document);
