@@ -33,10 +33,12 @@
     return temp.innerHTML;
   }
 
+  // Get the JSON from a fetch request
   function getJSON(response) {
     return (response.ok) ? response.json() : Promise.reject(response);
   }
 
+  // Fetch data from an endpoint AND get the JSON, in a single function
   function fetchData(url) {
     return fetch(url).then(getJSON);
   }
@@ -63,6 +65,7 @@
     screenReader.textContent = app.textContent;
   }
 
+  // Fetch data from the Weatherbit API
   function fetchWeather(data) {
     return fetchData(endpoints.weather.url +
       "?key=" + endpoints.weather.apiKey +
@@ -71,6 +74,7 @@
     );
   }
 
+  // Insert an error message into the DOM
   function insertError(error) {
     app.innerHTML = (
       "<p>" +
