@@ -41,7 +41,7 @@
       "<p>" +
         " Last observed: " +
         "<time>" +
-          new Date(data.ob_time).toLocaleTimeString() +
+          new Date(data.ob_time.replace(" ", "T")).toLocaleTimeString() +
         "</time>." +
       "</p>"
     );
