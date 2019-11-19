@@ -9,7 +9,7 @@ var showWeather = function(options) {
   // Default options for the plugin
   var defaults = {
     selector: "#app",
-    measurement: "celsius",
+    units: "M",
     message: "Right now in {city}, it's {temperature} and {conditions}.",
     icon: true
   };
@@ -17,15 +17,10 @@ var showWeather = function(options) {
   // Merge any user options into the defaults
   var settings = Object.assign(defaults, options);
 
-  var endpoints = {
-    location: "https://ipapi.co/json",
-    weather: {
-      url: "https://api.weatherbit.io/v2.0/current",
-      apiKey: "ee0dd94ba1d741ef95017dd656b88a52"
-    }
-  };
+  // Get the element to render the data into
+  var app = document.querySelector(settings.selector);
 
-  var app = document.querySelector(selector);
+
 
 
 
@@ -40,7 +35,7 @@ var showWeather = function(options) {
    * @return {String}      The sanitized string
    */
   function sanitizeHTML(str) {
-    var temp = document.createElement('div');
+    var temp = document.createElement("div");
     temp.textContent = str;
     return temp.innerHTML;
   }
@@ -55,29 +50,49 @@ var showWeather = function(options) {
     return fetch(url).then(getJSON);
   }
 
+  // Return C or F depending on the units chosen (metric or imperial)
+  function configureUnits(unitsSetting) {
+    unitsSetting = unitsSetting.toLowerCase();
+    if (unitsSetting === "m") return "C";
+    if (unitsSetting === "i") return "F";
+  }
+
+  // Return a blank string or an icon depending on `settings.icon`
+  function configureIcon(iconSetting) {
+    var icon = "";
+
+    if (iconSetting) {
+      icon += "<img src='https://www.weatherbit.io/static/img/icons/" + sanitizeHTML(data.weather.icon) + ".png' alt='" + sanitizeHTML(data.weather.description) + "'>";
+    }
+
+    return icon;
+  }
+
   function insertData(data) {
+    // Create variables for the icon and units
+    var icon = configureIcon(settings.icon);
+    var units = configureUnits(settings.units);
+
     // Get the actual data object
     data = data["data"][0];
 
     // Show the weather data on the page
     app.innerHTML = (
-      "<img src='https://www.weatherbit.io/static/img/icons/" + sanitizeHTML(data.weather.icon) + ".png' alt='" + sanitizeHTML(data.weather.description) + "'>" +
+      icon +
       "<p>" +
-        "Right now in " + sanitizeHTML(data.city_name) + ", it's " + sanitizeHTML(data.temp) + "&deg;C and " + sanitizeHTML(data.weather.description).toLowerCase() + "." +
-      "</p>" +
-      "<p>" +
-        " Last observed: " +
-        "<time>" +
-          new Date(sanitizeHTML(data.ob_time).replace(" ", "T")).toLocaleTimeString() +
-        "</time>." +
+        settings.message
+          .replace("{city}", data.city_name)
+          .replace("{temperature}", data.temp + "&deg;" + units)
+          .replace("{conditions}", data.weather.description.toLowerCase()) +
       "</p>"
     );
   }
 
   // Fetch data from the Weatherbit API
   function getWeather(data) {
-    return getData(endpoints.weather.url +
-      "?key=" + endpoints.weather.apiKey +
+    return getData("https://api.weatherbit.io/v2.0/current" +
+      "?key=" + "ee0dd94ba1d741ef95017dd656b88a52" +
+      "&units=" + settings.units +
       "&city=" + data.city +
       "&country=" + data.country
     );
@@ -94,11 +109,13 @@ var showWeather = function(options) {
 
 
 
+
+
   /**
    * Init
    */
 
-  getData(endpoints.location)
+  getData("https://ipapi.co/json")
     .then(getWeather)
     .then(insertData)
     .catch(insertError);
