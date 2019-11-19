@@ -83,10 +83,12 @@ var showWeather = function(options) {
     app.innerHTML = (
       icon +
       "<p>" +
-        settings.message
-          .replace("{city}", data.city_name)
-          .replace("{temperature}", data.temp + "&deg;" + units)
-          .replace("{conditions}", data.weather.description.toLowerCase()) +
+        sanitizeHTML(
+          settings.message
+            .replace("{city}", data.city_name)
+            .replace("{temperature}", data.temp + "&deg;" + units)
+            .replace("{conditions}", data.weather.description.toLowerCase())
+        ) +
       "</p>"
     );
   }
