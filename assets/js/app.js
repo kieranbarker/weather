@@ -1,4 +1,4 @@
-;(function(d) {
+var showWeather = function() {
 
   "use strict";
 
@@ -14,8 +14,8 @@
     }
   };
 
-  var app = d.querySelector("#app");
-  var screenReader = d.querySelector("#screen-reader");
+  var app = document.querySelector("#app");
+  var screenReader = document.querySelector("#screen-reader");
 
 
 
@@ -96,4 +96,4 @@
     .then(insertData)
     .catch(insertError);
 
-})(document);
+};
