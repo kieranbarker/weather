@@ -1,4 +1,4 @@
-var showWeather = function() {
+var showWeather = function(options) {
 
   "use strict";
 
@@ -13,6 +13,9 @@ var showWeather = function() {
     message: "Right now in {city}, it's {temperature} and {conditions}.",
     icon: true
   };
+
+  // Merge any user options into the defaults
+  var settings = Object.assign(defaults, options);
 
   var endpoints = {
     location: "https://ipapi.co/json",
