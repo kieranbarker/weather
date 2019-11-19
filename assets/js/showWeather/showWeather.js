@@ -70,7 +70,7 @@ var showWeather = function(options) {
 
   function insertData(data) {
     // Create variables for the icon and units
-    var icon, units,
+    var icon, units;
 
     // Get the actual data object
     data = data["data"][0];
