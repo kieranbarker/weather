@@ -95,7 +95,7 @@ var showWeather = function(options) {
   function getWeather(data) {
     return getData("https://api.weatherbit.io/v2.0/current" +
       "?key=" + "ee0dd94ba1d741ef95017dd656b88a52" +
-      "&units=" + settings.units +
+      "&units=" + settings.units.toUpperCase() +
       "&city=" + data.city +
       "&country=" + data.country
     );
