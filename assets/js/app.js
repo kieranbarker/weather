@@ -6,6 +6,14 @@ var showWeather = function() {
    * Variables
    */
 
+  // Default options for the plugin
+  var defaults = {
+    selector: "#app",
+    measurement: "celsius",
+    message: "Right now in {city}, it's {temperature} and {conditions}.",
+    icon: true
+  };
+
   var endpoints = {
     location: "https://ipapi.co/json",
     weather: {
