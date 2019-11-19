@@ -25,8 +25,7 @@ var showWeather = function(options) {
     }
   };
 
-  var app = document.querySelector("#app");
-  var screenReader = document.querySelector("#screen-reader");
+  var app = document.querySelector(selector);
 
 
 
@@ -73,9 +72,6 @@ var showWeather = function(options) {
         "</time>." +
       "</p>"
     );
-
-    // Announce the update to screen readers
-    screenReader.textContent = app.textContent;
   }
 
   // Fetch data from the Weatherbit API
