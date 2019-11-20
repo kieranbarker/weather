@@ -53,14 +53,14 @@ var showWeather = function(options) {
   }
 
   // Return C or F depending on the units chosen (metric or imperial)
-  function configureUnits(unitsSetting) {
+  function getUnits(unitsSetting) {
     unitsSetting = unitsSetting.toLowerCase();
     if (unitsSetting === "m") return "C";
     if (unitsSetting === "i") return "F";
   }
 
   // Return a blank string or an icon depending on `settings.icon`
-  function configureIcon(iconSetting, data) {
+  function getIcon(iconSetting, data) {
     var icon = "";
 
     if (iconSetting) {
@@ -86,8 +86,8 @@ var showWeather = function(options) {
     data = data["data"][0];
 
     // Configure icon and units
-    icon = configureIcon(settings.icon, data);
-    units = configureUnits(settings.units);
+    icon = getIcon(settings.icon, data);
+    units = getUnits(settings.units);
 
     // Show the weather data on the page
     app.innerHTML = icon + "<p>" + getDescription(data) + "</p>";
