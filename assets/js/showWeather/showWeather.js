@@ -70,6 +70,13 @@ var showWeather = function(options) {
     return icon;
   }
 
+  function getDescription(data) {
+    return settings.message
+      .replace("{city}", sanitizeHTML(data.city_name))
+      .replace("{temperature}", sanitizeHTML(data.temp) + "&deg;" + units)
+      .replace("{conditions}", sanitizeHTML(data.weather.description).toLowerCase());
+  }
+
   function insertData(data) {
     // Create variables for the icon and units
     var icon, units;
@@ -82,15 +89,7 @@ var showWeather = function(options) {
     units = configureUnits(settings.units, data);
 
     // Show the weather data on the page
-    app.innerHTML = (
-      icon +
-      "<p>" +
-        settings.message
-          .replace("{city}", sanitizeHTML(data.city_name))
-          .replace("{temperature}", sanitizeHTML(data.temp) + "&deg;" + units)
-          .replace("{conditions}", sanitizeHTML(data.weather.description).toLowerCase()) +
-      "</p>"
-    );
+    app.innerHTML = icon + "<p>" + getDescription(data) + "</p>";
   }
 
   // Fetch data from the Weatherbit API
