@@ -11,7 +11,7 @@ var showWeather = function(options) {
     apiKey: null,
     selector: "#app",
     units: "M",
-    message: "Right now in {city}, it's {temperature} and {conditions}.",
+    message: "Right now in {city_name}, it's {temp} and {description}.",
     icon: true,
     error: "Sorry, there was a problem getting the weather. Please try again later."
   };
@@ -71,11 +71,27 @@ var showWeather = function(options) {
   }
 
   // Get the description of the weather
-  function getDescription(data) {
-    return settings.message
-      .replace("{city}", sanitizeHTML(data.city_name))
-      .replace("{temperature}", sanitizeHTML(data.temp) + "&deg;" + units)
-      .replace("{conditions}", sanitizeHTML(data.weather.description).toLowerCase());
+  function getDescription(data, units) {
+    return settings.message.replace(/{[\w$-]+}/ig, function(match) {
+      // Get the property name inside the curly braces
+      match = match.slice(1, -1);
+
+      // Handle direct properties of the data
+      if (match in data) {
+        if (match === "temp") {
+          return sanitizeHTML(data[match]) + "&deg;" + units;
+        }
+        return sanitizeHTML(data[match]);
+      }
+
+      // Handle properties inside the `weather` object of the data
+      if (match in data.weather) {
+        if (match === "description") {
+          return sanitizeHTML(data["weather"][match]).toLowerCase();
+        }
+        return sanitizeHTML(data["weather"][match]);
+      }
+    });
   }
 
   function insertData(data) {
@@ -90,7 +106,7 @@ var showWeather = function(options) {
     units = getUnits(settings.units);
 
     // Show the weather data on the page
-    app.innerHTML = icon + "<p>" + getDescription(data) + "</p>";
+    app.innerHTML = icon + "<p>" + getDescription(data, units) + "</p>";
   }
 
   // Fetch data from the Weatherbit API
