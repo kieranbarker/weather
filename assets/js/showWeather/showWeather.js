@@ -52,7 +52,7 @@ var showWeather = function(options) {
     return fetch(url).then(getJSON);
   }
 
-  // Return a blank string or an icon depending on `settings.icon`
+  // Return a blank string or an icon
   function getIcon(data) {
     var icon = "";
 
