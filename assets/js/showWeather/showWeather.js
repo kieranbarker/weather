@@ -116,6 +116,12 @@ var showWeather = function(options) {
    * Init
    */
 
+   // Don't run if no API key was provided
+   if (!settings.apiKey) {
+     console.error("Please provide an API key.");
+     return;
+   }
+
   getData("https://ipapi.co/json")
     .then(getWeather)
     .then(insertData)
