@@ -52,13 +52,6 @@ var showWeather = function(options) {
     return fetch(url).then(getJSON);
   }
 
-  // Return C or F depending on the units chosen (metric or imperial)
-  function getUnits(unitsSetting) {
-    unitsSetting = unitsSetting.toLowerCase();
-    if (unitsSetting === "m") return "C";
-    if (unitsSetting === "i") return "F";
-  }
-
   // Return a blank string or an icon depending on `settings.icon`
   function getIcon(iconSetting, data) {
     var icon = "";
@@ -68,6 +61,13 @@ var showWeather = function(options) {
     }
 
     return icon;
+  }
+
+  // Return C or F depending on the units chosen (metric or imperial)
+  function getUnits(unitsSetting) {
+    unitsSetting = unitsSetting.toLowerCase();
+    if (unitsSetting === "m") return "C";
+    if (unitsSetting === "i") return "F";
   }
 
   // Get the description of the weather
