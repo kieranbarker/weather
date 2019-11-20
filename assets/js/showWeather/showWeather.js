@@ -8,10 +8,12 @@ var showWeather = function(options) {
 
   // Default options for the plugin
   var defaults = {
+    apiKey: null,
     selector: "#app",
     units: "M",
-    message: "Right now in {city}, it's {temperature} and {conditions}.",
-    icon: true
+    message: "Right now in {city_name}, it's {temp} and {description}.",
+    icon: true,
+    error: "Sorry, there was a problem getting the weather. Please try again later."
   };
 
   // Merge any user options into the defaults
@@ -50,22 +52,46 @@ var showWeather = function(options) {
     return fetch(url).then(getJSON);
   }
 
+  // Return a blank string or an icon
+  function getIcon(data) {
+    var icon = "";
+
+    if (settings.icon) {
+      icon += "<img src='https://www.weatherbit.io/static/img/icons/" + sanitizeHTML(data.weather.icon) + ".png' alt='" + sanitizeHTML(data.weather.description) + "'>";
+    }
+
+    return icon;
+  }
+
   // Return C or F depending on the units chosen (metric or imperial)
-  function configureUnits(unitsSetting, data) {
+  function getUnits(unitsSetting) {
     unitsSetting = unitsSetting.toLowerCase();
     if (unitsSetting === "m") return "C";
     if (unitsSetting === "i") return "F";
   }
 
-  // Return a blank string or an icon depending on `settings.icon`
-  function configureIcon(iconSetting, data) {
-    var icon = "";
+  // Get the description of the weather
+  function getDescription(data, units) {
+    return settings.message.replace(/{[\w$-]+}/ig, function(match) {
+      // Get the property name inside the curly braces
+      match = match.slice(1, -1);
 
-    if (iconSetting) {
-      icon += "<img src='https://www.weatherbit.io/static/img/icons/" + sanitizeHTML(data.weather.icon) + ".png' alt='" + sanitizeHTML(data.weather.description) + "'>";
-    }
+      // Handle direct properties of the data
+      if (match in data) {
+        if (match === "temp" || match === "app_temp") {
+          return sanitizeHTML(data[match]) + "&deg;" + units;
+        }
+        return sanitizeHTML(data[match]);
+      }
 
-    return icon;
+      // Handle properties inside the `weather` object of the data
+      if (match in data.weather) {
+        if (match === "description") {
+          return sanitizeHTML(data["weather"][match]).toLowerCase();
+        }
+        return sanitizeHTML(data["weather"][match]);
+      }
+    });
   }
 
   function insertData(data) {
@@ -74,27 +100,20 @@ var showWeather = function(options) {
 
     // Get the actual data object
     data = data["data"][0];
+    console.dir(data);
 
     // Configure icon and units
-    icon = configureIcon(settings.icon, data);
-    units = configureUnits(settings.units, data);
+    icon = getIcon(data);
+    units = getUnits(settings.units);
 
     // Show the weather data on the page
-    app.innerHTML = (
-      icon +
-      "<p>" +
-        settings.message
-          .replace("{city}", sanitizeHTML(data.city_name))
-          .replace("{temperature}", sanitizeHTML(data.temp) + "&deg;" + units)
-          .replace("{conditions}", sanitizeHTML(data.weather.description).toLowerCase()) +
-      "</p>"
-    );
+    app.innerHTML = icon + "<p>" + getDescription(data, units) + "</p>";
   }
 
   // Fetch data from the Weatherbit API
   function getWeather(data) {
     return getData("https://api.weatherbit.io/v2.0/current" +
-      "?key=" + "ee0dd94ba1d741ef95017dd656b88a52" +
+      "?key=" + settings.apiKey +
       "&units=" + settings.units.toUpperCase() +
       "&city=" + data.city +
       "&country=" + data.country
@@ -103,11 +122,8 @@ var showWeather = function(options) {
 
   // Insert an error message into the DOM
   function insertError(error) {
-    app.innerHTML = (
-      "<p>" +
-        "Sorry, there was a problem getting the weather. Please try again later." +
-      "</p>"
-    );
+    console.error(error);
+    app.innerHTML = "<p>" + settings.error + "</p>";
   }
 
 
@@ -117,6 +133,12 @@ var showWeather = function(options) {
   /**
    * Init
    */
+
+   // Don't run if no API key was provided
+   if (!settings.apiKey) {
+     console.error("Please provide an API key.");
+     return;
+   }
 
   getData("https://ipapi.co/json")
     .then(getWeather)
