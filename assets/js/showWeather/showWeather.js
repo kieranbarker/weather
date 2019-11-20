@@ -70,6 +70,7 @@ var showWeather = function(options) {
     return icon;
   }
 
+  // Get the description of the weather
   function getDescription(data) {
     return settings.message
       .replace("{city}", sanitizeHTML(data.city_name))
