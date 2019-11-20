@@ -12,7 +12,8 @@ var showWeather = function(options) {
     selector: "#app",
     units: "M",
     message: "Right now in {city}, it's {temperature} and {conditions}.",
-    icon: true
+    icon: true,
+    error: "Sorry, there was a problem getting the weather. Please try again later."
   };
 
   // Merge any user options into the defaults
@@ -104,11 +105,7 @@ var showWeather = function(options) {
 
   // Insert an error message into the DOM
   function insertError(error) {
-    app.innerHTML = (
-      "<p>" +
-        "Sorry, there was a problem getting the weather. Please try again later." +
-      "</p>"
-    );
+    app.innerHTML = "<p>" + settings.error + "</p>";
   }
 
 
