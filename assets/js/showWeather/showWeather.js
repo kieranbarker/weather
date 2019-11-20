@@ -53,10 +53,10 @@ var showWeather = function(options) {
   }
 
   // Return a blank string or an icon depending on `settings.icon`
-  function getIcon(iconSetting, data) {
+  function getIcon(data) {
     var icon = "";
 
-    if (iconSetting) {
+    if (settings.icon) {
       icon += "<img src='https://www.weatherbit.io/static/img/icons/" + sanitizeHTML(data.weather.icon) + ".png' alt='" + sanitizeHTML(data.weather.description) + "'>";
     }
 
@@ -86,7 +86,7 @@ var showWeather = function(options) {
     data = data["data"][0];
 
     // Configure icon and units
-    icon = getIcon(settings.icon, data);
+    icon = getIcon(data);
     units = getUnits(settings.units);
 
     // Show the weather data on the page
