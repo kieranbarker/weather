@@ -100,6 +100,7 @@ var showWeather = function(options) {
 
     // Get the actual data object
     data = data["data"][0];
+    console.dir(data);
 
     // Configure icon and units
     icon = getIcon(data);
@@ -121,6 +122,7 @@ var showWeather = function(options) {
 
   // Insert an error message into the DOM
   function insertError(error) {
+    console.error(error);
     app.innerHTML = "<p>" + settings.error + "</p>";
   }
 
