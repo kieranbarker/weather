@@ -8,6 +8,7 @@ var showWeather = function(options) {
 
   // Default options for the plugin
   var defaults = {
+    apiKey: null,
     selector: "#app",
     units: "M",
     message: "Right now in {city}, it's {temperature} and {conditions}.",
@@ -94,7 +95,7 @@ var showWeather = function(options) {
   // Fetch data from the Weatherbit API
   function getWeather(data) {
     return getData("https://api.weatherbit.io/v2.0/current" +
-      "?key=" + "ee0dd94ba1d741ef95017dd656b88a52" +
+      "?key=" + settings.apiKey +
       "&units=" + settings.units.toUpperCase() +
       "&city=" + data.city +
       "&country=" + data.country
