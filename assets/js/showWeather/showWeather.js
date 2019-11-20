@@ -78,7 +78,7 @@ var showWeather = function(options) {
 
       // Handle direct properties of the data
       if (match in data) {
-        if (match === "temp") {
+        if (match === "temp" || match === "app_temp") {
           return sanitizeHTML(data[match]) + "&deg;" + units;
         }
         return sanitizeHTML(data[match]);
