@@ -1,15 +1,7 @@
 # Weather
 
-A vanilla JS plugin for getting a user’s location and displaying their current weather information.
+A simple plugin for getting a user’s location and displaying their current weather information, written in vanilla JS.
 
-My seventh project as part of the [Vanilla JS Academy](https://vanillajsacademy.com/) ⚓️ 🍦
+A [Vanilla JS Academy](https://vanillajsacademy.com/) project. ⚓️
 
-## Part 1
-
-Get the user’s location and displaying their current weather information.
-
-## Part 2
-
-Convert the script into a plugin.
-
-[View Demo](https://kieranbarker.github.io/weather/)
+[View Demo &rarr;](https://kieranbarker.github.io/weather/)
