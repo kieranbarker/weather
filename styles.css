@@ -1,0 +1,11 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 88%;
+  max-width: 30rem;
+  margin: 1rem auto;
+  line-height: 1.5;
+  font-family: Arial, Helvetica, sans-serif;
+}
